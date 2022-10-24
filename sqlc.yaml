@@ -1,0 +1,9 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "src/book/data/datasource/sqlc/query.sql"
+    schema: "src/book/data/datasource/sqlc/schema.sql"
+    gen:
+      go:
+        package: "book_datasource"
+        out: "src/book/data/datasource/remote_datasource"
