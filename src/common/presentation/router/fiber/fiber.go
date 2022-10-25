@@ -55,3 +55,17 @@ func (r *FiberRouter) Options(path string, h func(common_router.IContext)) {
 		return nil
 	})
 }
+
+func (r *FiberRouter) Listen(addr string) error {
+	return r.Router.(*fiber.App).Listen(addr)
+}
+
+func (r *FiberRouter) Group(path string) common_router.IRouter {
+	g := r.Router.Group(path)
+	return &FiberRouter{g}
+}
+
+func NewFiber(conf ...fiber.Config) common_router.IAPP {
+	r := fiber.New(conf...)
+	return &FiberRouter{r}
+}

@@ -1,29 +1,44 @@
 package main
 
 import (
-	"context"
 	"database/sql"
-
-	"github.com/gofiber/fiber/v2"
+	"fmt"
+	_ "github.com/lib/pq"
 	book_datasource "github.com/peam1146/go_clean_architecture/src/book/data/datasource/remote_datasource"
-	"github.com/peam1146/go_clean_architecture/src/book/data/repository"
-	book_usecase "github.com/peam1146/go_clean_architecture/src/book/domain/usecase"
+	book_repo_impl "github.com/peam1146/go_clean_architecture/src/book/data/repository"
+	book_controller "github.com/peam1146/go_clean_architecture/src/book/domain/controllers"
+	book_router "github.com/peam1146/go_clean_architecture/src/book/presentation/router"
+	"github.com/peam1146/go_clean_architecture/src/common/config"
+	router "github.com/peam1146/go_clean_architecture/src/common/presentation/router/fiber"
+	"log"
 )
 
+func setUpDB(dbConf *config.Database) (*sql.DB, error) {
+	postgresInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s", dbConf.Host, dbConf.Port, dbConf.User, dbConf.Password, dbConf.Name, dbConf.SSL)
+	db, err := sql.Open("postgres", postgresInfo)
+	return db, err
+}
 
 func main() {
-	db, err := sql.Open("postgres", "user=pqgotest dbname=pqgotest sslmode=verify-full")
+	conf, err := config.LoadAppConfig()
 	if err != nil {
-    panic(err)
+		log.Fatal(err)
 	}
 
-  bookQueires := book_datasource.New(db)
+	db, err := setUpDB(&conf.Database)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-  bookRepoImpl := book_repo_impl.NewBookRepositoryImpl(bookQueires)
-  getBookUseCase := book_usecase.NewGetBookUseCase(bookRepoImpl)
-  getBooksUseCase := book_usecase.NewGetBooksUseCase(bookRepoImpl)
+	bookDataSource := book_datasource.New(db)
+	bookRepo := book_repo_impl.NewBookRepositoryImpl(bookDataSource)
+	bookController := book_controller.NewBookController(bookRepo)
 
-  r := fiber.New()
+	r := router.NewFiber()
 
-  g := r.Group("/book")
+	g := r.Group("/book")
+
+	bookRouter := book_router.NewBookRouter(bookController, g)
+	bookRouter.Register()
+	r.Listen(fmt.Sprintf(":%d", conf.App.Port))
 }

@@ -7,9 +7,15 @@ type IContext interface {
 }
 
 type IRouter interface {
+	Group(path string) IRouter
 	Get(path string, h func(c IContext))
 	Put(path string, h func(c IContext))
 	Patch(path string, h func(c IContext))
 	Delete(path string, h func(c IContext))
 	Options(path string, h func(c IContext))
+}
+
+type IAPP interface {
+	IRouter
+	Listen(addr string) error
 }

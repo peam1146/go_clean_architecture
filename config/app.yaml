@@ -1,0 +1,12 @@
+app:
+  name: example
+  port: 3000
+  debug: true
+
+database:
+  host: localhost
+  port: 5432
+  username: myusername
+  password: mypassword
+  name: postgres
+  ssl: disable
