@@ -6,10 +6,9 @@ import (
 )
 
 type App struct {
-	AppName     string `mapstructure:"name"`
-	Port        int    `mapstructure:"port"`
-	Debug       bool   `mapstructure:"debug"`
-	MaxFileSize int    `mapstructure:"max_file_size"`
+	AppName string `mapstructure:"name"`
+	Port    int    `mapstructure:"port"`
+	Debug   bool   `mapstructure:"debug"`
 }
 
 type Database struct {
