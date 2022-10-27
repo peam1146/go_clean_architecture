@@ -1,6 +1,6 @@
 # Golang Clean architecture
 
-This is an example to implement [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) in to [Golang](https://go.dev)
+This is an example to implement [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) in [Golang](https://go.dev)
 
 Clean Architecture in this project was inspired by [Reso Coder's Flutter Clean Architecture Proposal](https://resocoder.com/2019/08/27/flutter-tdd-clean-architecture-course-1-explanation-project-structure/) and modified to be more appropriate with backend
 
